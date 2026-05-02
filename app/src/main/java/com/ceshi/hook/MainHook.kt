@@ -17,7 +17,11 @@ class MainHook : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (lpparam.packageName != TARGET_PACKAGE) return
 
-        XposedBridge.log("[$TAG] 进入 Shopee，准备注入")
+        // 避免太早介入导致壳在初始化时就检测到模块的 ClassLoader 异常
+        // 我们利用 Handler 稍微延时打印，或者仅仅是让当前类不立即执行任何实质操作
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            XposedBridge.log("[$TAG] 进入 Shopee，准备注入 (延时加载测试)")
+        }, 3000)
 
         // 警告：Shopee 拥有极强的商业加固（壳）和环境检测风控。
         // 全局 Hook `Throwable.getStackTrace`、`ClassLoader.loadClass` 或 `Method.getModifiers` 
