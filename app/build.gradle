@@ -1,0 +1,39 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdk 34
+    namespace 'com.ceshi.hook'
+
+    defaultConfig {
+        applicationId "com.ceshi.hook"
+        minSdk 27
+        targetSdk 34
+        versionCode 11
+        versionName "3.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    // LSPosed/Xposed API，compileOnly：只在编译期用，运行时由框架提供
+    compileOnly 'de.robv.android.xposed:api:82'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
+}
