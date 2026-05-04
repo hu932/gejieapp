@@ -1,8 +1,7 @@
 Package: com.gejie.assistant
-Name: 格界v1.0
-Depends: mobilesubstrate | firmware (>= 15.0)
 Version: 1.0.0
 Architecture: iphoneos-arm64
+Depends: mobilesubstrate
 Description: 虾皮全新升级悬浮窗助手
 Maintainer: GeJie
 Author: GeJie
