@@ -82,37 +82,49 @@
     [self addGestureRecognizer:pan];
     
     // Setup expanded content view
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 60, 200, 180)];
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 60, 200, 192)];
     self.contentView.alpha = 0;
     [self addSubview:self.contentView];
     
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 180, 20)];
-    self.titleLabel.text = @"格界 v1.0";
+    self.titleLabel.text = @"格界 v1.1";
     self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:self.titleLabel];
     
-    self.identifierField = [[UITextField alloc] initWithFrame:CGRectMake(20, 36, 160, 30)];
-    self.identifierField.placeholder = @"输入标识";
+    UILabel *identifierTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 30, 160, 12)];
+    identifierTitle.text = @"标识";
+    identifierTitle.textColor = [UIColor lightGrayColor];
+    identifierTitle.font = [UIFont systemFontOfSize:11];
+    [self.contentView addSubview:identifierTitle];
+
+    self.identifierField = [[UITextField alloc] initWithFrame:CGRectMake(20, 42, 160, 28)];
+    self.identifierField.placeholder = @"请输入标识";
     self.identifierField.textColor = [UIColor whiteColor];
     self.identifierField.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.08];
     self.identifierField.layer.cornerRadius = 8;
-    self.identifierField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 30)];
+    self.identifierField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 28)];
     self.identifierField.leftViewMode = UITextFieldViewModeAlways;
     [self.contentView addSubview:self.identifierField];
 
-    self.passwordField = [[UITextField alloc] initWithFrame:CGRectMake(20, 72, 160, 30)];
-    self.passwordField.placeholder = @"输入密码";
+    UILabel *passwordTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 72, 160, 12)];
+    passwordTitle.text = @"密码";
+    passwordTitle.textColor = [UIColor lightGrayColor];
+    passwordTitle.font = [UIFont systemFontOfSize:11];
+    [self.contentView addSubview:passwordTitle];
+
+    self.passwordField = [[UITextField alloc] initWithFrame:CGRectMake(20, 84, 160, 28)];
+    self.passwordField.placeholder = @"请输入密码";
     self.passwordField.secureTextEntry = YES;
     self.passwordField.textColor = [UIColor whiteColor];
     self.passwordField.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.08];
     self.passwordField.layer.cornerRadius = 8;
-    self.passwordField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 30)];
+    self.passwordField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 28)];
     self.passwordField.leftViewMode = UITextFieldViewModeAlways;
     [self.contentView addSubview:self.passwordField];
     
-    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 106, 180, 24)];
+    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 118, 180, 20)];
     self.statusLabel.text = @"等待连接...";
     self.statusLabel.textColor = [UIColor lightGrayColor];
     self.statusLabel.font = [UIFont systemFontOfSize:12];
@@ -121,7 +133,7 @@
     [self.contentView addSubview:self.statusLabel];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.actionButton.frame = CGRectMake(20, 134, 160, 36);
+    self.actionButton.frame = CGRectMake(20, 138, 160, 34);
     [self.actionButton setTitle:@"开始运行" forState:UIControlStateNormal];
     [self.actionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.actionButton.backgroundColor = [UIColor colorWithRed:0.2 green:0.6 blue:1.0 alpha:1.0];
@@ -154,7 +166,7 @@
     self.isExpanded = !self.isExpanded;
     [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (self.isExpanded) {
-            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 200, 180);
+            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 200, 192);
             self.layer.cornerRadius = 20;
             self.toggleButton.frame = CGRectMake(70, 0, 60, 60);
             self.contentView.alpha = 1;
@@ -175,7 +187,9 @@
 
 - (void)actionButtonClicked {
     [self updateStatus:@"正在登录..."];
-    [[GeJieNetworkManager sharedManager] loginWithIdentifier:self.identifierField.text password:self.passwordField.text completion:^(BOOL success, NSString *errorMsg) {
+    NSString *identifier = [self.identifierField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password = [self.passwordField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [[GeJieNetworkManager sharedManager] loginWithIdentifier:identifier password:password completion:^(BOOL success, NSString *errorMsg) {
         if (success) {
             [self updateStatus:@"登录成功，获取任务..."];
             [self startTaskLoop];
