@@ -1,8 +1,9 @@
-Package: com.gejie.assistant
-Version: 1.0.0
+Package: com.gejie.assistant2
+Name: GeJie Assistant
+Version: 1.1.0
 Architecture: iphoneos-arm64
-Depends: mobilesubstrate
-Description: 虾皮全新升级悬浮窗助手
+Depends: mobilesubstrate (>= 0.9.5000)
+Description: 标识账号密码登录的悬浮窗助手
 Maintainer: GeJie
 Author: GeJie
 Section: Tweaks

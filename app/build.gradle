@@ -8,11 +8,11 @@ android {
     namespace 'com.ceshi.hook'
 
     defaultConfig {
-        applicationId "com.ceshi.hook"
+        applicationId "com.gejie.assistant2"
         minSdk 27
         targetSdk 34
-        versionCode 11
-        versionName "3.0"
+        versionCode 12
+        versionName "3.1"
     }
 
     buildTypes {
