@@ -13,14 +13,21 @@
     return sharedInstance;
 }
 
-- (void)loginWithCompletion:(void (^)(BOOL success, NSString *errorMsg))completion {
+- (void)loginWithIdentifier:(NSString *)identifier
+                   password:(NSString *)password
+                  completion:(void (^)(BOOL success, NSString *errorMsg))completion {
+    if (identifier.length == 0 || password.length == 0) {
+        if (completion) completion(NO, @"标识或密码不能为空");
+        return;
+    }
+
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/user/login", BASE_URL]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"*/*" forHTTPHeaderField:@"Accept"];
     
-    NSDictionary *bodyDict = @{@"username": @"youngdenise", @"password": @"@dzaM3mT9I"};
+    NSDictionary *bodyDict = @{@"username": identifier, @"password": password};
     NSData *bodyData = [NSJSONSerialization dataWithJSONObject:bodyDict options:0 error:nil];
     request.HTTPBody = bodyData;
     

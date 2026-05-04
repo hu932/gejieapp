@@ -7,6 +7,8 @@
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *statusLabel;
+@property (nonatomic, strong) UITextField *identifierField;
+@property (nonatomic, strong) UITextField *passwordField;
 @property (nonatomic, strong) UIButton *actionButton;
 
 @property (nonatomic, assign) BOOL isExpanded;
@@ -80,7 +82,7 @@
     [self addGestureRecognizer:pan];
     
     // Setup expanded content view
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 60, 200, 140)];
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 60, 200, 180)];
     self.contentView.alpha = 0;
     [self addSubview:self.contentView];
     
@@ -91,16 +93,35 @@
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:self.titleLabel];
     
-    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 40, 180, 40)];
+    self.identifierField = [[UITextField alloc] initWithFrame:CGRectMake(20, 36, 160, 30)];
+    self.identifierField.placeholder = @"输入标识";
+    self.identifierField.textColor = [UIColor whiteColor];
+    self.identifierField.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.08];
+    self.identifierField.layer.cornerRadius = 8;
+    self.identifierField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 30)];
+    self.identifierField.leftViewMode = UITextFieldViewModeAlways;
+    [self.contentView addSubview:self.identifierField];
+
+    self.passwordField = [[UITextField alloc] initWithFrame:CGRectMake(20, 72, 160, 30)];
+    self.passwordField.placeholder = @"输入密码";
+    self.passwordField.secureTextEntry = YES;
+    self.passwordField.textColor = [UIColor whiteColor];
+    self.passwordField.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.08];
+    self.passwordField.layer.cornerRadius = 8;
+    self.passwordField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 30)];
+    self.passwordField.leftViewMode = UITextFieldViewModeAlways;
+    [self.contentView addSubview:self.passwordField];
+    
+    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 106, 180, 24)];
     self.statusLabel.text = @"等待连接...";
     self.statusLabel.textColor = [UIColor lightGrayColor];
     self.statusLabel.font = [UIFont systemFontOfSize:12];
     self.statusLabel.textAlignment = NSTextAlignmentCenter;
-    self.statusLabel.numberOfLines = 0;
+    self.statusLabel.numberOfLines = 1;
     [self.contentView addSubview:self.statusLabel];
     
     self.actionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.actionButton.frame = CGRectMake(20, 90, 160, 36);
+    self.actionButton.frame = CGRectMake(20, 134, 160, 36);
     [self.actionButton setTitle:@"开始运行" forState:UIControlStateNormal];
     [self.actionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.actionButton.backgroundColor = [UIColor colorWithRed:0.2 green:0.6 blue:1.0 alpha:1.0];
@@ -133,7 +154,7 @@
     self.isExpanded = !self.isExpanded;
     [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (self.isExpanded) {
-            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 200, 200);
+            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 200, 180);
             self.layer.cornerRadius = 20;
             self.toggleButton.frame = CGRectMake(70, 0, 60, 60);
             self.contentView.alpha = 1;
@@ -154,10 +175,9 @@
 
 - (void)actionButtonClicked {
     [self updateStatus:@"正在登录..."];
-    [[GeJieNetworkManager sharedManager] loginWithCompletion:^(BOOL success, NSString *errorMsg) {
+    [[GeJieNetworkManager sharedManager] loginWithIdentifier:self.identifierField.text password:self.passwordField.text completion:^(BOOL success, NSString *errorMsg) {
         if (success) {
             [self updateStatus:@"登录成功，获取任务..."];
-            // Start business logic
             [self startTaskLoop];
         } else {
             [self updateStatus:[NSString stringWithFormat:@"登录失败: %@", errorMsg]];
